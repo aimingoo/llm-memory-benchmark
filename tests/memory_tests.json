@@ -1,0 +1,48 @@
+[
+  {
+    "id": "persona_retention_1",
+    "description": "User gives a name early; later ask to recall name.",
+    "events": [
+      {"type":"utterance","text":"Hi, I'm Alice and I love hiking.","store_memory": true, "metadata": {"source":"user", "kind":"persona", "id":"mem_persona_1"}},
+      {"type":"utterance","text":"We talked about travel.","store_memory": false}
+    ],
+    "queries": [
+      {"at_event": 2, "query":"What is the user's name?", "expected":"Alice", "expected_memory_id":"mem_persona_1", "top_k":5}
+    ]
+  },
+  {
+    "id": "fact_update_1",
+    "description": "User corrects previous fact; test update/overwrite.",
+    "events": [
+      {"type":"utterance","text":"My favorite city is Paris.","store_memory": true, "metadata": {"source":"user","kind":"preference","id":"mem_pref_1"}},
+      {"type":"utterance","text":"Actually, I moved — my favorite city is Tokyo now.","store_memory": true, "metadata": {"source":"user","kind":"preference","id":"mem_pref_1_updated"}}
+    ],
+    "queries": [
+      {"at_event": 2, "query":"What's the user's favorite city?", "expected":"Tokyo", "expected_memory_id":"mem_pref_1_updated", "top_k":5}
+    ]
+  },
+  {
+    "id": "interference_1",
+    "description": "Insert many distractor memories, ensure old memory still retrievable.",
+    "events": [
+      {"type":"utterance","text":"User's pet is a golden retriever named Buddy.","store_memory": true, "metadata": {"source":"user","kind":"pet","id":"mem_pet_1"}},
+      {"type":"utterance","text":"Random note A","store_memory": true, "metadata": {"source":"system","kind":"note","id":"d1"}},
+      {"type":"utterance","text":"Random note B","store_memory": true, "metadata": {"source":"system","kind":"note","id":"d2"}},
+      {"type":"utterance","text":"Random note C","store_memory": true, "metadata": {"source":"system","kind":"note","id":"d3"}}
+    ],
+    "queries": [
+      {"at_event": 4, "query":"What's the name of the user's pet?", "expected":"Buddy", "expected_memory_id":"mem_pet_1", "top_k":5}
+    ]
+  },
+  {
+    "id": "deletion_1",
+    "description": "Memory deletion test (note: current template does not implement deletion; placeholder to implement).",
+    "events": [
+      {"type":"utterance","text":"I used to work at OldCorp.","store_memory": true, "metadata": {"id":"mem_job_old","kind":"employment"}},
+      {"type":"action","text":"DELETE mem_job_old","store_memory": false}
+    ],
+    "queries": [
+      {"at_event": 2, "query":"Where did the user used to work?", "expected":"OldCorp", "expected_memory_id":"mem_job_old", "top_k":5}
+    ]
+  }
+]

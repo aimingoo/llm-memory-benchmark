@@ -1,0 +1,6 @@
+openai>=1.0.0
+chromadb>=0.3.27
+langchain>=0.0.300
+tqdm
+python-dotenv
+faiss-cpu; platform_system != "Darwin"
